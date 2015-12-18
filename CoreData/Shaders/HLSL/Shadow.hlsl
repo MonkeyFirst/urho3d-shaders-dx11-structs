@@ -14,7 +14,9 @@ struct VS_INPUT
 #ifdef INSTANCED
 	float4x3 iModelInstance : TEXCOORD2;
 #endif
+#ifndef NOUV
     float2 iTexCoord : TEXCOORD0;
+#endif
 };
 
 struct VS_OUTPUT
@@ -29,8 +31,12 @@ VS_OUTPUT VS(VS_INPUT IN)
     float4x3 modelMatrix = iModelMatrix;
     float3 worldPos = GetWorldPos(modelMatrix);
 	OUT.oPos = GetClipPos(worldPos);
+    #ifndef NOUV
 	OUT.oTexCoord = GetTexCoord(IN.iTexCoord);
-	return OUT;
+	#else
+    OUT.oTexCoord = float2(0,0);
+    #endif
+    return OUT;
 }
 #endif
 
